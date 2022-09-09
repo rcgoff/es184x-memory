@@ -1,0 +1,167 @@
+PAL16L8					PAL DESIGN SPECIFICATION
+Chg2KP14				LEONID YADRENNIKOV ??.??.2022
+Replacement for 555KP14 in ES1840 memory board
+RT labs
+SEL A8 A16 JMP A6 A14 A7v0 A15 CS1 GND A1 LH Q3 Q2 CS Q4 A13 A5 Q1 VCC
+
+/Q1= /SEL * /A8  + SEL * /A16 
+/Q2= /SEL * /A6  + SEL * /A14
+/Q3= /SEL * /A7v0  + SEL * /A15
+/Q4= /SEL * /A5  + SEL * /A13
+/LH= A1 * JMP + /A1* /JMP
+/CS= A5 * /A6 * A7v0 * /A8 * /A13 * /A14 * /A15 * /CS1 * /LH
+
+FUNCTION TABLE
+
+ SEL  A8 A16 Q1  A6 A14 Q2  A7v0 A15 Q3  A5 A13 Q4  A1 JMP LH   CS1 CS
+------------------------------------------------------------------------
+ L    L  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X   ;1st mpx test
+ L    H  L  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    L  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    H  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    L  H  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    H  L  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    L  H  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ L    H  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    L  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    L  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    L  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    H  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    H  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    L  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    H  L  L    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+ H    H  H  H    X  X   X   X    X   X   X  X   X   X  X   X    X   X 
+;
+ L    X  X  X    L  X   L   X    X   X   X  X   X   X  X   X    X   X   ;2nd mpx test
+ L    X  X  X    H  X   H   X    X   X   X  X   X   X  X   X    X   X
+ H    X  X  X    X  L   L   X    X   X   X  X   X   X  X   X    X   X
+ H    X  X  X    X  H   H   X    X   X   X  X   X   X  X   X    X   X
+;
+ L    X  X   X   X  X   X   L    X   L   X  X   X   X  X   X    X   X   ;3rd mpx test
+ L    X  X   X   X  X   X   H    X   H   X  X   X   X  X   X    X   X
+ H    X  X   X   X  X   X   X    L   L   X  X   X   X  X   X    X   X
+ H    X  X   X   X  X   X   X    H   H   X  X   X   X  X   X    X   X
+;
+ L    X  X   X   X  X   X   X    X   X   L  X   L   X  X   X    X   X   ;4th mpx test
+ L    X  X   X   X  X   X   X    X   X   H  X   H   X  X   X    X   X
+ H    X  X   X   X  X   X   X    X   X   X  L   L   X  X   X    X   X
+ H    X  X   X   X  X   X   X    X   X   X  H   H   X  X   X    X   X
+;
+ X    X  X   X   X  X   X   X    X   X   X  X   X   H  H   L    X   X   ;LH test, JMP=1: select with A1=1
+ X    X  X   X   X  X   X   X    X   X   X  X   X   L  H   H    X   X      
+ X    X  X   X   X  X   X   X    X   X   X  X   X   L  L   L    X   X   ;LH test, JMP=0: selct with A1=0
+ X    X  X   X   X  X   X   X    X   X   X  X   X   H  L   H    X   X 
+;
+ X    L  X   X   L  L   X   H    L   X   H  L   X   X  X   L    L   L   ;cs=select test, LH=0
+ X    L  X   X   L  L   X   H    L   X   H  L   X   H  H   L    L   L   ;cs=select test, JMP=1, A1=1
+ X    L  X   X   L  L   X   H    L   X   H  L   X   L  L   L    L   L   ;cs=select test, JMP=0, A1=0
+ X    L  X   X   L  L   X   H    L   X   H  L   X   L  H   H    L   H   ;cs=not-select test, JMP=1, A1=0
+ X    L  X   X   L  L   X   H    L   X   H  L   X   H  L   H    L   H   ;cs=not-select test, JMP=0, A1=1
+;
+ X    L  X   X   L  L   X   H    L   X   H  L   X   X  X   L    H   H   ;cs=not-select test, CS1=1
+ X    H  X   X   L  L   X   H    L   X   H  L   X   X  X   L    L   H   ;cs=not-select test, A8=1
+ X    L  X   X   H  L   X   H    L   X   H  L   X   X  X   L    L   H   ;cs=not-select test, A6=1
+ X    L  X   X   L  H   X   H    L   X   H  L   X   X  X   L    L   H   ;cs=not-select test, A14=1
+ X    L  X   X   L  L   X   L    L   X   H  L   X   X  X   L    L   H   ;cs=not-select test, A7=0
+ X    L  X   X   L  L   X   H    H   X   H  L   X   X  X   L    L   H   ;cs=not-select test, A15=1
+ X    L  X   X   L  L   X   H    L   X   L  L   X   X  X   L    L   H   ;cs=not-select test, A5=0
+ X    L  X   X   L  L   X   H    L   X   H  H   X   X  X   L    L   H   ;cs=not-select test, A13=1
+ X    L  X   X   H  H   X   L    L   X   H  L   X   X  X   L    L   H   ;cs=not-select test, some addr. wrong
+
+------------------------------------------------------------------------
+DESCRIPTION
+
+2b0h=     0010.1011.00 00
+2b3h=     0010.1011.00 11
+
+A1= (по перемычке) перв
+A2= 0              перв
+A3= 0              перв
+
+A4= 1              перв
+A5= 1
+A6= 0
+A7= 1
+
+A8= 0
+A9= 1              перв
+A10=0              перв
+A11=0              перв
+
+A12=0              перв
+A13=0
+A14=0
+A15=0
+
+Порты у нас в IBM PC до 03ffh, то есть до 1024.
+Соответственно адресных линий 10 всего.
+
+(однако по https://bochs.sourceforge.io/techspec/PORTS.LST используются и более высокие номера адресов).
+Интересно, как сделано в собственно 1841-плате?
+
+Последняя линия (A0):
+	-должна пройти на регистр
+	-дожна быть буферирована (но она и так буферирована).
+
+Так как мы считаем, что наша плата аналогична двум платам типа 1841, 
+мы должны дешифровать два адреса (2b0-2b1 или 2b2-2b3). 
+Какой адрес дешифруем, определяет.. ну пусть перемычка.
+
+Остается 8 адресов и 9-й (A1) надо буферировать.
+
+В микросхеме заменителя коммутатора разместится 10 адресов.
+Но не подряд!
+Скорее всего, дешифратор придется располовинивать на две микросхемы - 
+первичную и вторичную, причем во вторичной нужен вход от первой.
+(там как раз есть свободный вывод). 
+
+При создании первого варианта платы было сделано два внешних коммутатора адреса:
+-один на линию A8 микросхем памяти
+-а второй был сделан на другую линию потому, что в РУ7 нельзя было использовать тот вариант коммутации,
+который был сделан для РУ5.
+
+Сейчас мы заменяем узел коммутатора целиком и возникает вопрос - можем ли мы исключить второй коммутатор,
+ведя коммутацию для РУ5 иначе?
+
+Нужно составить таблицы коммутации в исходной схеме и в моей плате (первый вариант).
+
+
+Как сделано в платах 1840 и 41 (разводка по контактам м/с разная):
+
+Первый коммутатор:
+A1/A9
+A2/A10
+A3/A11
+A4/A12
+
+Второй коммутатор:
+A5/A13
+A6/A14
+A7vA0/A15
+A8/A16
+
+Вспомнил!
+Я сделал A1/A17 и A9/A18.
+
+При проектировании платы первого варианта не было учтено, что РУ5 требует регенерации только по первым 7 линиям (аналогично РУ6),
+именно для этого воткнули A0 туда, для уменьшения периода регенерации.
+
+Расположение выводов в КП14     Расположение выводов в замене
+м/с координаты A08
+
+1 SEL          16  Vcc          1 SEL          20  Vcc
+2 1.0  A8      15  EZ           2 1.0  A8      19  -Q1  
+3 1.1  A16     14  4.0   A5     3 1.1  A16     18  4.0 A5        
+4 Q1           13  4.1   A13    4 nJMP         17  4.1 A13          
+5 2.0  A6      12  Q4           5 2.0  A6      16  Q4
+6 2.1  A14     11  3.0   A7v0   6 2.1  A14     15  n /CS       
+7 Q2           10  3.1   A15    7 -3.0 A7v0    14  -Q2       
+8 GND           9  Q3           8 -3.1 A15     13  Q3
+                                9 n/CS1        12  nLH
+                                10 GND         11  nA1
+
+В этом варианте одна проблема: не буферируется A1, это нужно делать внешней схемой.
+Если буферировать A1, то тогда не хватает выводов в первой м/с (A1/A17 придется коммутировать во второй).
+А может работать не с A1, а с сигналом с выхода коммутатора A1/A17 или A1/A9? 
+В каком состоянии находится коммутатор РасКас'а при обращении к порту? -
+т.к. он подключен к линии задержки, а она к /(/MEMR * /WE) - то при чтении - в низком

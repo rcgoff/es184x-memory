@@ -1,0 +1,156 @@
+PAL16L8					PAL DESIGN SPECIFICATION
+Chg1KP14				LEONID YADRENNIKOV ??.??.2022
+Replacement for 555KP14 in ES1840 memory board
+RT labs
+SEL A4 A12 A9 A3 A11 A2 A10 A17 GND A18 Q5 Q3 Q2 CS Q4 Q6 A1 Q1 VCC
+
+/Q1= /SEL * /A1  + SEL * /A9 
+/Q2= /SEL * /A2  + SEL * /A10
+/Q3= /SEL * /A3  + SEL * /A11
+/Q4= /SEL * /A4  + SEL * /A12
+/Q5= /SEL * /A1  + SEL * /A17
+/Q6= /SEL * /A9  + SEL * /A18
+/CS= /A2 * /A3 * A9 * /A10 * /A11 * /A12
+
+FUNCTION TABLE
+
+ SEL  A1 A9 Q1  A17 Q5  A18 Q6  A2 A10 Q2  A3 A11 Q3  A4 A12 Q4  CS
+--------------------------------------------------------------------- 
+ L    L  X  L   X   L   X   X   X  X   X   X  X   X   X  X   X   X   ;1st and 5th mpx test
+ L    H  X  H   X   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q1 translates A1,Q5 translates A1)
+ L    L  L  L   X   L   X   X   X  X   X   X  X   X   X  X   X   X   ;1st and 5th mpx test
+ L    H  L  H   X   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q1 translates A1,Q5 translates A1)
+ L    L  L  L   X   L   X   X   X  X   X   X  X   X   X  X   X   X   ;1st and 5th mpx test
+ L    H  H  H   X   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q1 translates A1,Q5 translates A1)
+ L    L  H  L   X   L   X   X   X  X   X   X  X   X   X  X   X   X   ;1st and 5th mpx test
+ L    H  L  H   X   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q1 translates A1,Q5 translates A1)
+ L    L  H  L   X   L   X   X   X  X   X   X  X   X   X  X   X   X   ;1st and 5th mpx test
+ L    H  H  H   X   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q1 translates A1,Q5 translates A1)
+ H    X  L  L   X   X   X   X   X  X   X   X  X   X   X  X   X   X   ;1st  mpx test
+ H    X  H  H   X   X   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=1,Q1 translates A9)
+;
+ L    X  L  X   X   X   X   L   X  X   X   X  X   X   X  X   X   X   ;6th mpx test
+ L    X  H  X   X   X   X   H   X  X   X   X  X   X   X  X   X   X   ;(SEL=0,Q6 translates A9)
+ H    X  X  X   X   X   L   L   X  X   X   X  X   X   X  X   X   X   ;(SEL=1,Q6 translates A18)
+ H    X  X  X   X   X   H   H   X  X   X   X  X   X   X  X   X   X
+;
+ H    X  X  X   L   L   X   X   X  X   X   X  X   X   X  X   X   X   ;5th mpx test ending
+ H    X  X  X   H   H   X   X   X  X   X   X  X   X   X  X   X   X   ;(SEL=1,Q5 translates A17)
+;
+ L    X  X  X   X   X   X   X   L  X   L   X  X   X   X  X   X   X   ;2nd mpx test
+ L    X  X  X   X   X   X   X   H  X   H   X  X   X   X  X   X   X
+ H    X  X  X   X   X   X   X   X  L   L   X  X   X   X  X   X   X
+ H    X  X  X   X   X   X   X   X  H   H   X  X   X   X  X   X   X
+;
+ L    X  X   X  X   X   X   X   X  X   X   L  X   L   X  X   X   X   ;3rd mpx test
+ L    X  X   X  X   X   X   X   X  X   X   H  X   H   X  X   X   X
+ H    X  X   X  X   X   X   X   X  X   X   X  L   L   X  X   X   X
+ H    X  X   X  X   X   X   X   X  X   X   X  H   H   X  X   X   X
+;
+ L    X  X   X  X   X   X   X   X  X   X   X  X   X   L  X   L   X   ;4th mpx test
+ L    X  X   X  X   X   X   X   X  X   X   X  X   X   H  X   H   X
+ H    X  X   X  X   X   X   X   X  X   X   X  X   X   X  L   L   X
+ H    X  X   X  X   X   X   X   X  X   X   X  X   X   X  H   H   X
+;
+ X    X  H   X  X   X   X   X   L  L   X   L  L   X   H  L   X   L   ;cs test
+ X    X  L   X  X   X   X   X   X  X   X   X  X   X   X  X   X   H
+ X    X  X   X  X   X   X   X   H  X   X   X  X   X   X  X   X   H
+ X    X  X   X  X   X   X   X   X  H   X   X  X   X   X  X   X   H
+ X    X  X   X  X   X   X   X   X  X   X   H  X   X   X  X   X   H
+ X    X  X   X  X   X   X   X   X  X   X   X  H   X   X  X   X   H
+ X    X  X   X  X   X   X   X   X  X   X   X  X   X   L  X   X   H
+ X    X  X   X  X   X   X   X   X  X   X   X  X   X   X  H   X   H
+-------------------------------------------------------------------------------
+
+DESCRIPTION
+
+2b0h=     0010.1011.00 00
+2b3h=     0010.1011.00 11
+
+A1= (по перемычке) перв
+A2= 0              перв
+A3= 0              перв
+
+A4= 1              перв
+A5= 1
+A6= 0
+A7= 1
+
+A8= 0
+A9= 1              перв
+A10=0              перв
+A11=0              перв
+
+A12=0              перв
+A13=0
+A14=0
+A15=0
+
+Порты у нас в IBM PC до 03ffh, то есть до 1024.
+Соответственно адресных линий 10 всего.
+
+(однако по https://bochs.sourceforge.io/techspec/PORTS.LST используются и более высокие номера адресов).
+Интересно, как сделано в собственно 1841-плате?
+
+Последняя линия (A0):
+	-должна пройти на регистр
+	-дожна быть буферирована (но она и так буферирована).
+
+Так как мы считаем, что наша плата аналогична двум платам типа 1841, 
+мы должны дешифровать два адреса (2b0-2b1 или 2b2-2b3). 
+Какой адрес дешифруем, определяет.. ну пусть перемычка.
+
+Остается 8 адресов и 9-й (A1) надо буферировать.
+
+В микросхеме заменителя коммутатора разместится 10 адресов.
+Но не подряд!
+Скорее всего, дешифратор придется располовинивать на две микросхемы - 
+первичную и вторичную, причем во вторичной нужен вход от первой.
+(там как раз есть свободный вывод). 
+
+При создании первого варианта платы было сделано два внешних коммутатора адреса:
+-один на линию A8 микросхем памяти
+-а второй был сделан на другую линию потому, что в РУ7 нельзя было использовать тот вариант коммутации,
+который был сделан для РУ5.
+
+Сейчас мы заменяем узел коммутатора целиком и возникает вопрос - можем ли мы исключить второй коммутатор,
+ведя коммутацию для РУ5 иначе?
+
+Нужно составить таблицы коммутации в исходной схеме и в моей плате (первый вариант).
+
+
+Как сделано в платах 1840 и 41 (разводка по контактам м/с разная):
+
+Первый коммутатор:
+A1/A9
+A2/A10
+A3/A11
+A4/A12
+
+Второй коммутатор:
+A5/A13
+A6/A14
+A7vA0/A15
+A8/A16
+
+Вспомнил!
+Я сделал A1/A17 и A9/A18.
+
+При проектировании платы первого варианта не было учтено, что РУ5 требует регенерации только по первым 7 линиям (аналогично РУ6),
+именно для этого воткнули A0 туда, для уменьшения периода регенерации.
+
+Расположение выводов в КП14     Расположение выводов в замене
+м/с координаты A09
+
+1 SEL          16  Vcc          1 SEL          20  Vcc
+2 1.0  A4      15  EZ           2 1.0  A4      19  -Q1  
+3 1.1  A12     14  4.0   A1     3 1.1  A12     18  4.0 A1        
+4 Q1           13  4.1   A9     4 -4.1 A9      17  nQ6          
+5 2.0  A3      12  Q4           5 2.0  A3      16  Q4
+6 2.1  A11     11  3.0   A2     6 2.1  A11     15  nCS       
+7 Q2           10  3.1   A10    7 -3.0 A2      14  -Q2       
+8 GND           9  Q3           8 -3.1 A10     13  Q3
+                                9 nA17         12  nQ5
+                                10 GND         11  nA18
+
+
