@@ -1,0 +1,30 @@
+PAL16L8					PAL DESIGN SPECIFICATION
+DCRASA18				LEONID YADRENNIKOV ??.??.2022
+Replacement for 555ID7 (A18) in ES1840 memory board
+RT labs
+P1 P2 A17 A18 ZEROV MEMSEL DACK0 RAS CAS GND 
+P11 P12 P13 BANK3 BANK2 BANK1 BANK0 PLUS P19 VCC
+
+/BANK0=/A17*/A18*RAS*/MEMSEL*/DACK0 +
+        RAS*DACK0
+/BANK1=/PLUS
+/BANK2=A17*/A18*RAS*/MEMSEL*/DACK0 +
+	A18*RAS*/MEMSEL*/DACK0 +
+        /CAS*DACK0        
+/BANK3=/PLUS
+/P12=/PLUS
+/P13=/PLUS
+/P19=P1*P2*ZEROV*P11
+
+
+DESCRIPTION
+RAS decoder. 
+BANK0 assumed to be RU5-based - lower 128k.
+The 2nd term is for usual refresh.
+BANK2 is RU7-based - the rest 384k.
+Wnen refresh time occurs, DACK0 is turned HIGH.
+To support CAS-before-RAS refresh mode of RU7,
+in that period CAS signal transferred to BANK2.
+If it's no need for this mode, simply tie CAS to Vcc.
+
+
